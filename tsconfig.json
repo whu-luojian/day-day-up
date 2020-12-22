@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    /* 基本信息 */
+    "target": "esnext", // 指定 ECMAScript 目标版本
+    "module": "esnext", // 指定使用模块
+    "allowJs": true, // 允许编译 javascript 文件
+    "checkJs": true,  // 报告 javascript 文件中的错误
+    "jsx": "preserve",  // 指定 jsx 代码的生成: 'preserve', 'react-native', or 'react'
+    "importHelpers": true, // 从 tslib 导入辅助工具函数
+    "lib": [ // 指定要包含在编译中的库文件
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ],
+
+    /* 严格类型检查 */
+    "strict": true, // 启用所有严格类型检查选项
+    "noImplicitAny": true, // 在表达式和声明上有隐含的 any类型时报错
+    "strictNullChecks": true, // 启用严格的 null 检查
+    "noImplicitThis": true, // 当 this 表达式值为 any 类型的时候，生成一个错误
+
+    /* 额外的检查 */
+    "noUnusedLocals": true, // 有未使用的变量时，抛出错误
+    "noUnusedParameters": true, // 有未使用的参数时，抛出错误
+    "noImplicitReturns": true, // 并不是所有函数里的代码都有返回值时，抛出错误
+
+    /* 模块解析选项 */
+    "moduleResolution": "node", // 选择模块解析策略： 'node' (Node.js) or 'classic' (TypeScript pre-1.6)
+    "baseUrl": ".", // 用于解析非相对模块名称的基目录
+    "paths": {  // 模块名到基于 baseUrl 的路径映射的列表
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "allowSyntheticDefaultImports": true,  // 允许从没有设置默认导出的模块中默认导入
+    "skipLibCheck": true,
+    "experimentalDecorators": true, // 启用装饰器
+    "esModuleInterop": true,
+    "sourceMap": false
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+, "src/2020-12-03/question-2.ts"  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
