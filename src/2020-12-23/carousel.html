@@ -6,8 +6,182 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      background: #fefefe;
+    }
+    .wrap {
+      width: 375px;
+      overflow: hidden;
+      box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+      position: relative;
+      background: #000;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    /* 注意 */
+    .list {
+      float: left;
+      display: flex;
+    }
+    .list img {
+      width: 375px;
+      vertical-align: top;
+    }
+    .dot{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      bottom: 20px;
+    }
+    .dot li{
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      background: #fff;
+      margin: 0 5px;
+      transition: 0.2s;
+      box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+    }
+
+    .dot li.active{
+      width: 20px;
+    }
+  </style>
 </head>
 <body>
-  
+  <div class="wrap">
+    <ul class="list">
+      <li class="item">
+        <img src="./1.jpg" alt="">
+      </li>
+      <li class="item">
+        <img src="./2.jpg" alt="">
+      </li>
+      <li class="item">
+        <img src="./3.jpg" alt="">
+      </li>
+      <li class="item">
+        <img src="./4.jpg" alt="">
+      </li>
+    </ul>
+    <ul class="dot">
+      <li class="active"></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+  <script>
+    const wrap = document.querySelector('.wrap') // 外框，用于获取轮播宽度
+    const list = wrap.querySelector('.list') // 图片列表
+    const dot = wrap.querySelectorAll('.dot li') // 小点
+    
+    // 无缝滚动 dom 结构变更，最前面加一张末尾的图片，末尾加一张开始的照片
+    // 注意使用 firstElementChild 而不是 firstchild，同时需要 cloneNode(true)
+    const firstImg = list.firstElementChild.cloneNode(true)
+    const lastImg = list.lastElementChild.cloneNode(true)
+    list.appendChild(firstImg)
+    list.insertBefore(lastImg, list.firstElementChild)
+
+    let startpoint = {} // 鼠标按下的起始点
+    let distance = {} // 移动的距离
+    let startOffset = 0 // 记录鼠标按下时图片列表的位置
+    let translateX = 0 // 移动的距离
+
+    let imgW = wrap.offsetWidth // 轮播外框宽度
+    let proportion = 0.5 // 当图片拖动超过整体宽度的比例时，跳转到下一张或上一张
+
+    let now = 1 // 当前在哪一张，默认为第一张
+    translateX = -imgW
+    list.style.transform = `translateX(${translateX}px)`
+
+    let isMove = false // click 会触发touchstart、touchend，不会触发touchmove，所以为防止touchend时上一次的distance影响结果，使用 isMove 判断
+
+    // 手指按下的时候记录手指按下的位置
+    window.addEventListener('touchstart', (e) => {
+      let touch = e.changedTouches[0]
+      startpoint = {
+        x: touch.pageX,
+        y: touch.pageY
+      }
+
+      // 无缝滚动，当前为第一张时切换到倒数第二张，当前为最后一张时切换到第二张
+      const imgCount = list.children.length
+      if (now === imgCount - 1) {
+        now = 1
+      } else if (now === 0) {
+        now = imgCount - 2
+      }
+      translateX = now * -imgW
+      startOffset = translateX
+      list.style.transition = 'none'
+      list.style.transform = `translateX(${translateX}px)`
+    })
+
+    window.addEventListener('touchmove', (e) => {
+      let touch = e.changedTouches[0]
+      distance = {
+        x: touch.pageX - startpoint.x,
+        y: touch.pageY - startpoint.y
+      }
+
+      // https://juejin.cn/post/6844904134211010574
+      // x 轴滑动时才 e.preventDefault()，e.preventDefault() 目的是为了兼容 qq 和 微信，保证内核一直触发 touchmove 事件
+      // y 轴 e.preventDefault()会导致页面无法滚动
+      if (Math.abs(distaince.x) - Math.abs(distaince.y) > 5){
+        isMove = true
+        e.preventDefault()
+      }else {
+        isMove = false
+      }
+
+      if (isMove) {
+        translateX = startOffset + distance.x
+        list.style.transform = `translateX(${translateX}px)` // 移动距离
+      }
+    })
+
+    wrap.addEventListener('touchend', () => {
+      if (isMove) {
+        if (Math.abs(distance.x) > imgW * proportion) {
+          now = distance.x > 0 ? now - 1 : now + 1
+        }
+
+        Array.from(dot).forEach((item, index)=>{
+          item.classList.remove('active')
+          if(index + 1 === now || (now === 0 && index === dot.length - 1) || (now === dot.length + 1 && index === 0)) {
+            item.classList.add('active')
+          }
+        })
+
+        translateX = now * -imgW // 计算图片移动距离
+        list.style.transition = 'transform 0.3s' // 动画
+        list.style.transform = `translateX(${translateX}px)`
+      }
+
+      isMove = false // 置为false
+    })
+
+    Array.from(dot).forEach((item, index)=>{
+      item.onclick = function(e){
+        Array.from(dot).forEach((item)=>{
+          item.classList.remove('active')
+        })
+
+        now = index + 1
+        this.classList.add('active')
+        translateX = now * -imgW
+        list.style.transition = '0.3s'
+        list.style.transform = `translateX(${translateX}px)`
+        e.preventDefault()
+      }
+    })
+  </script>
 </body>
 </html>
