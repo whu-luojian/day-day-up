@@ -42,7 +42,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx"
-, "src/2020-12-03/question-2.ts"  ],
+, "src/2020-12-03/question-2.ts", "src/2021-02-23/question-1.ts", "src/2021-03-03/question-1.ts"  ],
   "exclude": [
     "node_modules"
   ]
