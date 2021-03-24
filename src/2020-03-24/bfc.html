@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- BFC -->
+
+  <!-- BFC 创建方式 -->
+  <!--  
+    1. 根元素（html）
+    2. 浮动元素（元素的 float 不是 none）
+    3. 绝对定位元素（元素的 position 为 absolute 或 fixed）
+    4. overflow 不为 visible 的块元素（hidden、auto、scroll）
+    5. display 为 flow-root 的元素
+    6. 弹性元素（display 为 flex 和 inline-flex 的元素）
+    7. 行内块元素（display 为 inline-block）
+    8. 表格相关元素（display 为 table、table-cell、table-row、table-caption 等）
+  -->
+
+  <!-- BFC 布局规则 -->
+  <!-- 
+    1. BFC 是页面上一个隔离的独立容器，容器内的子元素不会影响到外面的元素，外面的元素也不会影响到内部子元素
+    2. 在 BFC 中，内部的 Box 会在垂直方向，一个接一个放置
+    3. Box 垂直方向的距离由 margin 决定。属于同一个 BFC 的两个相邻 Box 的 margin 会发生重叠（margin 塌陷）
+    4. BFC 区域不会与 float box 重叠
+    5. 在计算 BFC 的高度时，浮动元素也参与计算
+    6. 在 BFC 中，每个元素的 margin box 的左边，与包含块 border box 的左边相接触，即使存在浮动也是如此
+   -->
+
+   <!-- 应用 -->
+   <!-- 
+     1. 自适应两栏布局 https://jsbin.com/bisamuzohi/edit?html,css,output
+     2. margin 塌陷（父子元素）：https://juejin.cn/post/6844903937192132616
+     3. margin 合并（兄弟元素）：https://juejin.cn/post/6844903937192132616
+    -->
+</body>
+</html>

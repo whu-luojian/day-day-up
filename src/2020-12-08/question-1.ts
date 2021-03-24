@@ -18,7 +18,7 @@
       console.log('dosth_a3_after')
     }
 
-    function fn([a1, a2, a3]){}
+    function fn([a1, a2, a3])()
  */
 
 /**

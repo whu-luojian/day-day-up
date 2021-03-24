@@ -55,7 +55,7 @@ const isPossible = (nums: number[]) => {
 
 /**
  * start、end数组
- * @param nums
+ * @param nums [1,2,3,3,4,4,5,5]
  */
 const isPossible2 = (nums: number[]) => {
   const start: number[] = []
