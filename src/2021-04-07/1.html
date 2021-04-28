@@ -1,0 +1,77 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script>
+    const jsonpCall = (function() {
+      let count = 0
+
+      return url => {
+        count++
+        const callbackName = 'jsonpCallback' + count
+        url = url + (url.includes('?') ? '&' : '?') + `callback=${callbackName}`
+        let script = document.createElement('script')
+        script.src = url
+        document.body.appendChild(script)
+
+        script.onload = script.onerror = function() {
+          document.body.removeChild(script)
+          delete window[callbackName]
+        }
+
+        return new Promise((reslove, reject) => {
+          window[callbackName] = function(data) {
+            try {
+              reslove(data)
+            } catch(e) {
+              reject(e)
+            }
+          }
+        })
+      }
+    })()
+
+    function jsonp(url, cb) {
+      jsonpCall(url).then(data => {
+        cb(data)
+      })
+    }
+
+    jsonp('http://photo.sina.cn/aj/index?page=1&cate=recommend', data => {
+      console.log(1, data)
+    })
+    jsonp('http://photo.sina.cn/aj/index?page=2&cate=recommend', data => {
+      console.log(2, data)
+    })
+
+    function jsonp1(url, cb) {
+        const callbackName = 'jsonpCallback' + Date.now() + parseInt(Math.random() * 1000)
+        url = url + (url.includes('?') ? '&' : '?') + `callback=${callbackName}`
+        let script = document.createElement('script')
+        script.src = url
+        document.body.appendChild(script)
+
+        window[callbackName] = function(data) {
+            cb(data)
+            document.body.removeChild(script)
+            delete window[callbackName]
+        }
+    }
+
+    jsonp1('http://photo.sina.cn/aj/index?page=1&cate=recommend', data => {
+      console.log(3, data)
+    })
+    jsonp1('http://photo.sina.cn/aj/index?page=2&cate=recommend', data => {
+      console.log(4, data)
+    })
+  </script>
+</body>
+
+</html>
